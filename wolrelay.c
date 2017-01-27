@@ -1,3 +1,5 @@
+#include "wolrelay.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +11,13 @@
 
 #define DEFAULT_PORT "1337"
 #define WOL_PACKET_LENGTH 102
+
+//Number of unused bytes in the beginning of WOL packet
+#define WOL_PACKET_OFFSET 6
+
+//Length of a MAC address
+#define MAC_ADDR_LENGTH 6
+
 //char *inet_ntoa(struct in_addr in);
 int main(int argc, char* argv[]){
 
@@ -58,4 +67,15 @@ int main(int argc, char* argv[]){
         printf("\n");
     }
 
+    
+
+}
+
+/*
+    Verify that given message is a valid WOL packet
+    @arg 
+*/
+int isValidMagicPacket(char* payload){
+    
+    
 }
