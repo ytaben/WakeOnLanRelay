@@ -75,10 +75,6 @@ int main(int argc, char* argv[]){
 
 }
 
-/*
-    Verify that given message is a valid WOL packet
-    @arg 
-*/
 int isValidMagicPacket(char* payload){
     
     //Check if first four bytes are 255
