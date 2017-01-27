@@ -3,8 +3,8 @@ CFLAGS=
 
 %.o: &.c
 	$(CC) -c -o $@ $< $(CFLAGS)
-	
-wolrelay: wolrelay.o
+
+wolrelay: wolrelay.h
 	$(CC) -o wolrelay wolrelay.o $(CFLAGS)
 
 clean:
