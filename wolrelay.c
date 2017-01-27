@@ -67,7 +67,11 @@ int main(int argc, char* argv[]){
         printf("\n");
     }
 
-    
+    if (isValidMagicPacket(buffer)){
+        printf("Magic packet verified\n");
+        printf("The mac address is following:\n");
+
+    }
 
 }
 
@@ -77,5 +81,17 @@ int main(int argc, char* argv[]){
 */
 int isValidMagicPacket(char* payload){
     
-    
+    //Check if first four bytes are 255
+    for (int i = 0; i < WOL_PACKET_OFFSET; i++){
+        if (payload[i] != (char) 0xFF) return 0;
+    }
+
+    //Check if we have the mac address is 16 times
+    for (int i = 0; i < 16; i++){
+        for (int k = 0; k < MAC_ADDR_LENGTH; k++){
+            if (payload[WOL_PACKET_OFFSET + k] != payload[WOL_PACKET_OFFSET + (MAC_ADDR_LENGTH * i) + k])
+                return 0;
+        }
+    }
+    return 1;
 }
