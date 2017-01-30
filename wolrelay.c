@@ -70,7 +70,7 @@ int main(int argc, char* argv[]){
     if (isValidMagicPacket(buffer)){
         printf("Magic packet verified\n");
         printf("The mac address is following:\n");
-
+        printMac(buffer);
     }
 
 }
@@ -90,4 +90,12 @@ int isValidMagicPacket(char* payload){
         }
     }
     return 1;
+}
+
+void printMac(char* payload){
+    for (int i = 0 + WOL_PACKET_OFFSET; i < MAC_ADDR_LENGTH; i++){
+        if (i % 2 == 0 && i > 0) printf(":");
+        printf("%X", (int)(*(unsigned char*)(&payload[i])));
+    }
+    printf("\n");
 }

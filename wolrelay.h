@@ -7,4 +7,9 @@
 */
 int isValidMagicPacket(char* payload);
 
+/*
+    Print the mac address from the given macgic packet payload
+    @arg payload - the content of the packet to be verified
+*/
+void printMac(char* payload);
 #endif
