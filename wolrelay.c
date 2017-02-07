@@ -114,8 +114,9 @@ int isValidMagicPacket(char* payload){
 }
 
 void printMac(char* payload){
-    for (int i = 0 + WOL_PACKET_OFFSET; i < MAC_ADDR_LENGTH; i++){
-        if (i % 2 == 0 && i > 0) printf(":");
+    for (int i = 0 + WOL_PACKET_OFFSET; i < MAC_ADDR_LENGTH + WOL_PACKET_OFFSET; i++){
+        if (i > 0 + WOL_PACKET_OFFSET)
+            printf(":");
         printf("%X", (int)(*(unsigned char*)(&payload[i])));
     }
     printf("\n");
