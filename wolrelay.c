@@ -59,39 +59,49 @@ int main(int argc, char* argv[]){
     struct sockaddr_storage src_addr;
     socklen_t src_addr_len = sizeof(src_addr);
     int s;
-
-    ssize_t count = recvfrom(fd, buffer, sizeof(buffer), 0, (struct sockaddr*)&src_addr, &src_addr_len);
-    if (count == -1) {
-        perror("Error reading from socket");
-    } else if (count != WOL_PACKET_LENGTH){
-        printf("The packet received is not 102 byte long and is %ld bytes long instead", (long) count);
-    } else {
-        char host[NI_MAXHOST], service[NI_MAXSERV];
-        s = getnameinfo((struct sockaddr *) &src_addr, src_addr_len, host, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICSERV);
-        printf("Received %ld bytes from %s:%s\n", (long) count, host, service);
-        for (int i = 0; i < count; i ++){
-            printf("%X", (int)(*(unsigned char*)(&buffer[i])) );
+    while(1)
+    {
+        ssize_t count = recvfrom(fd, buffer, sizeof(buffer), 0, (struct sockaddr *)&src_addr, &src_addr_len);
+        if (count == -1)
+        {
+            perror("Error reading from socket");
         }
-        printf("\n");
-    }
-
-    if (isValidMagicPacket(buffer)){
-        printf("Magic packet verified\n");
-        printf("The mac address is following:\n");
-        printMac(buffer);
-
-        printf("Resending the packet to network broadcast address\n");
-        ((struct sockaddr_in*)&src_addr)->sin_addr.s_addr = inet_addr("255.255.255.255");
-        int bytessent;
-        bytessent = sendto(fd, buffer, count, 0, (struct sockaddr *)&src_addr, src_addr_len);
-        if (bytessent > 0){
-            printf("Sent %d bytes to network broadcast address\n", bytessent);
-        } else if (bytessent == -1){
-            perror("Failed to resend WOL packet to network broadcast\n");
+        else if (count != WOL_PACKET_LENGTH)
+        {
+            printf("The packet received is not 102 byte long and is %ld bytes long instead", (long)count);
+        }
+        else
+        {
+            char host[NI_MAXHOST], service[NI_MAXSERV];
+            s = getnameinfo((struct sockaddr *)&src_addr, src_addr_len, host, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICSERV);
+            printf("Received %ld bytes from %s:%s\n", (long)count, host, service);
+            for (int i = 0; i < count; i++)
+            {
+                printf("%X", (int)(*(unsigned char *)(&buffer[i])));
+            }
+            printf("\n");
         }
 
-    }
+        if (isValidMagicPacket(buffer))
+        {
+            printf("Magic packet verified\n");
+            printf("The mac address is following:\n");
+            printMac(buffer);
 
+            printf("Resending the packet to network broadcast address\n");
+            ((struct sockaddr_in *)&src_addr)->sin_addr.s_addr = inet_addr("255.255.255.255");
+            int bytessent;
+            bytessent = sendto(fd, buffer, count, 0, (struct sockaddr *)&src_addr, src_addr_len);
+            if (bytessent > 0)
+            {
+                printf("Sent %d bytes to network broadcast address\n", bytessent);
+            }
+            else if (bytessent == -1)
+            {
+                perror("Failed to resend WOL packet to network broadcast\n");
+            }
+        }
+    }
 }
 
 int isValidMagicPacket(char* payload){
