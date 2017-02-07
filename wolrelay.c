@@ -42,6 +42,7 @@ int main(int argc, char* argv[]){
         perror("Failed to create a socket");
     }
 
+    //This will allow us to send network broadcasts
     const int enable_broadcast = 1;
     if (setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &enable_broadcast, sizeof enable_broadcast) == -1) {
         perror("Failed to allow broadcast on socket");
