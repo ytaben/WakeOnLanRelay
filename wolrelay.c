@@ -41,6 +41,12 @@ int main(int argc, char* argv[]){
         perror("Failed to create a socket");
     }
 
+    const int enable_broadcast = 1;
+    if (setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &enable_broadcast, sizeof enable_broadcast) == -1) {
+        perror("Failed to allow broadcast on socket");
+        exit(1);
+    }
+
     if (bind(fd, res->ai_addr, res->ai_addrlen) == -1 ) {
         perror("Failed to bind a local socket");
     }
@@ -71,6 +77,21 @@ int main(int argc, char* argv[]){
         printf("Magic packet verified\n");
         printf("The mac address is following:\n");
         printMac(buffer);
+
+        printf("Resending the packet to network broadcast address");
+        struct sockaddr_in remoteaddr;
+        remoteaddr.sin_family = AF_INET;
+        remoteaddr.sin_addr.s_addr = inet_addr("255.255.255.255"); //Specify network broadcast address
+        remoteaddr.sin_port = 0;
+
+        int bytessent;
+        bytessent = sendto(fd, buffer, count, 0, (struct sockaddr *)&remoteaddr, sizeof remoteaddr);
+        if (bytessent > 0){
+            printf("Sent %d bytes to network broadcast address", bytessent);
+        } else if (bytessent == -1){
+            perror("Failed to resend WOL packet to network broadcast");
+        }
+
     }
 
 }
