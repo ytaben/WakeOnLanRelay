@@ -80,18 +80,14 @@ int main(int argc, char* argv[]){
         printf("The mac address is following:\n");
         printMac(buffer);
 
-        printf("Resending the packet to network broadcast address");
-        struct sockaddr_in remoteaddr;
-        remoteaddr.sin_family = AF_INET;
-        remoteaddr.sin_addr.s_addr = inet_addr("255.255.255.255"); //Specify network broadcast address
-        remoteaddr.sin_port = 0;
-
+        printf("Resending the packet to network broadcast address\n");
+        ((struct sockaddr_in*)&src_addr)->sin_addr.s_addr = inet_addr("255.255.255.255");
         int bytessent;
-        bytessent = sendto(fd, buffer, count, 0, (struct sockaddr *)&remoteaddr, sizeof remoteaddr);
+        bytessent = sendto(fd, buffer, count, 0, (struct sockaddr *)&src_addr, src_addr_len);
         if (bytessent > 0){
-            printf("Sent %d bytes to network broadcast address", bytessent);
+            printf("Sent %d bytes to network broadcast address\n", bytessent);
         } else if (bytessent == -1){
-            perror("Failed to resend WOL packet to network broadcast");
+            perror("Failed to resend WOL packet to network broadcast\n");
         }
 
     }
