@@ -89,9 +89,9 @@ int main(int argc, char* argv[]){
             printMac(buffer);
 
             printf("Resending the packet to network broadcast address\n");
-            ((struct sockaddr_in *)&src_addr)->sin_addr.s_addr = inet_addr("255.255.255.255");
-            int bytessent;
-            bytessent = sendto(fd, buffer, count, 0, (struct sockaddr *)&src_addr, src_addr_len);
+            inet_aton("255.255.255.255", &((struct sockaddr_in *)&src_addr)->sin_addr);
+
+            int bytessent = sendto(fd, buffer, count, 0, (struct sockaddr *)&src_addr, src_addr_len);
             if (bytessent > 0)
             {
                 printf("Sent %d bytes to network broadcast address\n", bytessent);
