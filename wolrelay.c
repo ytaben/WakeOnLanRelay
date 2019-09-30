@@ -27,7 +27,6 @@ int main(int argc, char* argv[]){
     struct addrinfo hints;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET; //Allow only ipv4 for our our purpose
-    hints.ai_protocol = SOCK_DGRAM;
     hints.ai_protocol = IPPROTO_UDP;
     hints.ai_flags = AI_PASSIVE | AI_ADDRCONFIG;
 
